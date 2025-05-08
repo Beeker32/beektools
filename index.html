@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beektools</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: white;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-bottom: 2px solid #333;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #ffbf00;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .tool-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tool {
+            background-color: #1e1e1e;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 8px;
+            width: 280px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+        }
+
+        h2 {
+            color: #ffbf00;
+            margin-bottom: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #ffbf00;
+            border: none;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button:hover {
+            background-color: #e6a800;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: white;
+            margin-top: 20px;
+        }
+
+        footer a {
+            color: #ffbf00;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .result-output {
+            display: none; /* Initially hide the result output */
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #222;
+            border: 1px solid #444;
+            max-width: 100%;
+            word-wrap: break-word;
+            overflow: auto; /* Add scrollbars if needed */
+        }
+
+        .result-output a {
+            color: #5389ff; /* Fixed link color */
+            text-decoration: underline;
+        }
+
+        .result-output a:hover {
+            color: #4a7dbf; /* Darken the color slightly on hover */
+        }
+
+
+
+        .result-output.has-content {
+            display: block;
+        }
+
+        .qr-code {
+            display: block;
+            margin: 10px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .qr-link {
+            color: #ffbf00;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .qr-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Beektools</h1>
+        <p>A multitool by Beeker</p>
+    </header>
+
+    <div class="tool-container">
+        <!-- SHA-256 Hashing -->
+        <div class="tool">
+            <h2>SHA-256 Hashing</h2>
+            <input type="text" id="hash-input" placeholder="Enter text to hash">
+            <button onclick="hashText()">Generate Hash</button>
+            <div id="hash-result" class="result-output"></div>
+        </div>
+
+        <!-- Base64 Encoding/Decoding -->
+        <div class="tool">
+            <h2>Base64 Tools</h2>
+            <textarea id="base64-input" placeholder="Enter text to encode or decode"></textarea>
+            <button onclick="encodeBase64()">Encode to Base64</button>
+            <button onclick="decodeBase64()">Decode from Base64</button>
+            <div id="base64-result" class="result-output"></div>
+        </div>
+
+        <!-- URL Shortener -->
+        <div class="tool">
+            <h2>URL Shortener</h2>
+            <input type="text" id="url-input" placeholder="Enter your URL">
+            <input type="text" id="custom-url" placeholder="Custom URL (is.gd/example)">
+            <button onclick="shortenUrl()">Shorten URL</button>
+            <div id="url-result" class="result-output"></div>
+        </div>
+
+        <!-- QR Code Generator -->
+        <div class="tool">
+            <h2>QR Code Generator</h2>
+            <input type="text" id="qr-input" placeholder="Enter text or URL">
+            <button onclick="generateQR()">Generate QR Code</button>
+            <div id="qr-result" class="result-output"></div>
+        </div>
+
+        <!-- IP Geolocation -->
+        <div class="tool">
+            <h2>IP Geolocation</h2>
+            <input type="text" id="ip-input" placeholder="Enter IP Address">
+            <button onclick="performIPGeolocation()">Get Location</button>
+            <div id="ip-location-result" class="result-output"></div>
+        </div>
+
+        <!-- User-Agent Grabber -->
+        <div class="tool">
+            <h2>My User-Agent</h2>
+            <button onclick="getUserAgent()">Get User-Agent and IP</button>
+            <div id="user-agent-result" class="result-output"></div>
+        </div>
+
+        <!-- Discord Webhook Tools -->
+        <div class="tool">
+            <h2>Webhook Tools</h2>
+            <input type="text" id="discord-webhook-url" placeholder="Enter Webhook URL">
+            <textarea id="discord-message" placeholder="Enter message to send"></textarea>
+            <button onclick="verifyWebhook()">Verify</button>
+            <button onclick="sendWebhookMessage()">Send Message</button>
+            <button onclick="spamWebhookMessages()">Spam</button>
+            <button onclick="deleteWebhook()">Delete Webhook</button>
+            <div id="discord-result" class="result-output"></div>
+        </div>
+        <div class="tool">
+            <h2>Wordlist Hasher</h2>
+            <input type="file" id="wordlist-file" accept=".txt, .json">
+            <input type="text" id="hash-to-check" placeholder="Enter hash to check">
+            <button onclick="checkHashAgainstWordlist()">Check Hash</button>
+            <div id="hash-check-result" class="result-output"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p><a href="terms.txt" target="_blank">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        // Show result box with content
+        function showResultWithContent(resultDiv, content) {
+            resultDiv.innerHTML = content;
+            resultDiv.classList.add('has-content');
+        }
+        
+        // Hide result box
+        function hideResult(resultDiv) {
+            resultDiv.innerHTML = '';
+            resultDiv.classList.remove('has-content');
+        }
+
+        // SHA-256 Hashing
+        function hashText() {
+            const text = document.getElementById('hash-input').value;
+            const resultDiv = document.getElementById('hash-result');
+
+            if (text) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(text);
+                crypto.subtle.digest('SHA-256', data).then(hashBuffer => {
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+                    showResultWithContent(resultDiv, `<strong>SHA-256 Hash:</strong> ${hashHex}`);
+                });
+            } else {
+                showResultWithContent(resultDiv, 'Please enter text to hash.');
+            }
+        }
+
+        // Base64 Encoding
+        function encodeBase64() {
+            const inputText = document.getElementById('base64-input').value;
+            const resultDiv = document.getElementById('base64-result');
+            
+            if (inputText) {
+                const encodedText = btoa(inputText);
+                showResultWithContent(resultDiv, `<strong>Encoded Base64:</strong> ${encodedText}`);
+            } else {
+                showResultWithContent(resultDiv, 'Please enter text to encode.');
+            }
+        }
+
+        // Base64 Decoding
+        function decodeBase64() {
+            const inputText = document.getElementById('base64-input').value;
+            const resultDiv = document.getElementById('base64-result');
+            
+            if (inputText) {
+                try {
+                    const decodedText = atob(inputText);
+                    showResultWithContent(resultDiv, `<strong>Decoded Text:</strong> ${decodedText}`);
+                } catch (e) {
+                    showResultWithContent(resultDiv, '<strong>Error:</strong> Invalid Base64 string');
+                }
+            } else {
+                showResultWithContent(resultDiv, 'Please enter text to decode.');
+            }
+        }
+        
+        // URL Shortener (using is.gd API)
+        function shortenUrl() {
+            const longUrl = document.getElementById('url-input').value;
+            const customUrl = document.getElementById('custom-url').value;
+            const resultDiv = document.getElementById('url-result');
+
+            if (!longUrl) {
+                showResultWithContent(resultDiv, 'Please enter a URL to shorten.');
+                return;
+            }
+
+            // Remove any existing script tag for previous requests
+            const existingScript = document.getElementById('jsonp-script');
+            if (existingScript) {
+            existingScript.remove();
+            }
+
+            // Define the callback function
+            window.myfunction = function(data) {
+                if (data.shorturl) {
+                showResultWithContent(resultDiv, `<strong>Shortened URL:</strong> <a href="${data.shorturl}" target="_blank">${data.shorturl}</a>`);
+                } else {
+                    showResultWithContent(resultDiv, `<strong>Error:</strong> ${data.errormessage || 'Unable to shorten URL.'}`);
+                }
+            };
+
+            // Encode the URL components
+            const encodedLongUrl = encodeURIComponent(longUrl);
+            const encodedCustomUrl = encodeURIComponent(customUrl);
+
+            // Construct the JSONP request URL
+            const apiUrl = `https://is.gd/create.php?format=json&callback=myfunction&url=${encodedLongUrl}&shorturl=${encodedCustomUrl}&logstats=1`;
+
+            // Create a new script tag for the JSONP request
+            const script = document.createElement('script');
+            script.src = apiUrl;
+            script.id = 'jsonp-script';
+            document.body.appendChild(script);
+        }
+        
+        // QR Code Generator (using QR Server API)
+        function generateQR() {
+            const text = document.getElementById('qr-input').value;
+            const resultDiv = document.getElementById('qr-result');
+            
+            if (text) {
+                showResultWithContent(resultDiv, 'Generating QR code...');
+                
+                const encodedText = encodeURIComponent(text);
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedText}`;
+                
+                // Create a new image element to test if the URL works
+                const testImage = new Image();
+                testImage.src = qrUrl;
+                
+                testImage.onload = () => {
+                    // QR code generated successfully, show success message with link
+                    showResultWithContent(
+                        resultDiv, 
+                        `<a href="${qrUrl}" target="_blank" class="qr-link">Success! Click here to view</a>`
+                    );
+                };
+                
+                testImage.onerror = () => {
+                    showResultWithContent(resultDiv, '<strong>Error:</strong> Failed to generate QR code.');
+                };
+            } else {
+                showResultWithContent(resultDiv, 'Please enter text or URL for the QR code.');
+            }
+        }
+
+        // IP Geolocation (using ipinfo.io API)
+        function performIPGeolocation() {
+            const ip = document.getElementById('ip-input').value;
+            const resultDiv = document.getElementById('ip-location-result');
+
+            if (ip) {
+                showResultWithContent(resultDiv, 'Loading...');
+
+                fetch(`https://ipinfo.io/${ip}/json`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            showResultWithContent(resultDiv, `<strong>Error:</strong> ${data.error.message}`);
+                        } else {
+                            showResultWithContent(resultDiv, `<strong>Location for IP ${ip}:</strong>
+                            <pre>City: ${data.city || 'N/A'}</pre>
+                            <pre>Region: ${data.region || 'N/A'}</pre>
+                            <pre>Country: ${data.country || 'N/A'}</pre>
+                            <pre>Location: ${data.loc || 'N/A'}</pre>
+                            <pre>Organisation: ${data.org || 'N/A'}</pre>
+                            <pre>Postal Code: ${data.postal || 'N/A'}</pre>`);
+                        }
+                    })
+                    .catch(err => showResultWithContent(resultDiv, `<strong>Error:</strong> ${err}`));
+            } else {
+                showResultWithContent(resultDiv, 'Please enter an IP address.');
+            }
+        }
+
+        // Get User-Agent and Public IP
+        function getUserAgent() {
+            const resultDiv = document.getElementById('user-agent-result');
+            const userAgent = navigator.userAgent;
+            
+            showResultWithContent(resultDiv, 'Loading...');
+
+            fetch('https://ipinfo.io/json')
+                .then(response => response.json())
+                .then(data => {
+                    showResultWithContent(resultDiv, `
+                        <strong>User-Agent:</strong> ${userAgent}<br>
+                        <strong>Public IP Address:</strong> ${data.ip}`);
+                })
+                .catch(err => showResultWithContent(resultDiv, `<strong>Error:</strong> ${err}`));
+        }
+
+        // Discord Webhook Tools
+        function verifyWebhook() {
+            const webhookUrl = document.getElementById('discord-webhook-url').value;
+            const resultDiv = document.getElementById('discord-result');
+            
+            if (!webhookUrl) {
+                showResultWithContent(resultDiv, 'Please enter a webhook URL.');
+                return;
+            }
+            
+            showResultWithContent(resultDiv, 'Verifying webhook...');
+            fetch(webhookUrl)
+                .then(response => {
+                    if (response.ok) {
+                        showResultWithContent(resultDiv, 'Webhook verified successfully.');
+                    } else {
+                        showResultWithContent(resultDiv, `<strong>Error:</strong> Invalid webhook or access denied.`);
+                    }
+                })
+                .catch(err => showResultWithContent(resultDiv, `<strong>Error:</strong> ${err}`));
+        }
+
+        function sendWebhookMessage() {
+            const webhookUrl = document.getElementById('discord-webhook-url').value;
+            const message = document.getElementById('discord-message').value;
+            const resultDiv = document.getElementById('discord-result');
+            
+            if (!webhookUrl) {
+                showResultWithContent(resultDiv, 'Please enter a webhook URL.');
+                return;
+            }
+            
+            if (message) {
+                showResultWithContent(resultDiv, 'Sending message...');
+                fetch(webhookUrl, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ content: message }), 
+                    headers: { 'Content-Type': 'application/json' } 
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showResultWithContent(resultDiv, 'Message sent to webhook.');
+                    } else {
+                        showResultWithContent(resultDiv, `<strong>Error:</strong> Failed to send message.`);
+                    }
+                })
+                .catch(err => showResultWithContent(resultDiv, `<strong>Error:</strong> ${err}`));
+            } else {
+                showResultWithContent(resultDiv, 'Please enter a message to send.');
+            }
+        }
+
+        function spamWebhookMessages() {
+            const webhookUrl = document.getElementById('discord-webhook-url').value;
+            const message = document.getElementById('discord-message').value;
+            const resultDiv = document.getElementById('discord-result');
+            
+            if (!webhookUrl) {
+                showResultWithContent(resultDiv, 'Please enter a webhook URL.');
+                return;
+            }
+            
+            if (message) {
+                showResultWithContent(resultDiv, 'Sending messages...');
+                let sent = 0;
+                const totalMessages = 10;
+                
+                for (let i = 0; i < totalMessages; i++) {
+                    fetch(webhookUrl, { 
+                        method: 'POST', 
+                        body: JSON.stringify({ content: `${message} [${i+1}/${totalMessages}]` }), 
+                        headers: { 'Content-Type': 'application/json' } 
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            sent++;
+                            if (sent === totalMessages) {
+                                showResultWithContent(resultDiv, `Sent ${sent} messages to webhook.`);
+                            }
+                        }
+                    });
+                }
+            } else {
+                showResultWithContent(resultDiv, 'Please enter a message to spam.');
+            }
+        }
+
+        function deleteWebhook() {
+            const webhookUrl = document.getElementById('discord-webhook-url').value;
+            const resultDiv = document.getElementById('discord-result');
+            
+            if (!webhookUrl) {
+                showResultWithContent(resultDiv, 'Please enter a webhook URL.');
+                return;
+            }
+            
+            showResultWithContent(resultDiv, 'Deleting webhook...');
+            fetch(webhookUrl, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        showResultWithContent(resultDiv, 'Webhook deleted successfully.');
+                    } else {
+                        showResultWithContent(resultDiv, '<strong>Error:</strong> Failed to delete webhook.');
+                    }
+                })
+                .catch(err => showResultWithContent(resultDiv, `<strong>Error:</strong> ${err}`));
+        }
+            // Check Hash Against Wordlist
+            async function checkHashAgainstWordlist() {
+                const hashToCheck = document.getElementById('hash-to-check').value.trim();
+                const fileInput = document.getElementById('wordlist-file');
+                const resultDiv = document.getElementById('hash-check-result');
+        
+                if (!hashToCheck) {
+                    showResultWithContent(resultDiv, 'Please enter a hash to check.');
+                    return;
+                }
+
+                if (fileInput.files.length === 0) {
+                    showResultWithContent(resultDiv, 'Please upload a wordlist file.');
+                    return;
+                }
+
+                const file = fileInput.files[0];
+                try {
+                    const wordlist = await handleFileUpload(file);
+                    let hashFound = false;
+
+                    for (const word of wordlist) {
+                        const wordHash = await generateHash(word);
+                        if (wordHash === hashToCheck) {
+                            showResultWithContent(resultDiv, `<strong>Hash found in wordlist:</strong> ${word}`);
+                            hashFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!hashFound) {
+                        showResultWithContent(resultDiv, 'Hash not found in wordlist.');
+                    }
+                } catch (err) {
+                    showResultWithContent(resultDiv, `<strong>Error:</strong> ${err}`);
+                }
+            }
+
+            // Handle File Upload and Wordlist Parsing
+            function handleFileUpload(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+            
+                    reader.onload = function(event) {
+                        try {
+                            let wordlist = event.target.result.trim();
+                            if (file.name.endsWith('.json')) {
+                                wordlist = JSON.parse(wordlist);
+                                if (!Array.isArray(wordlist)) throw new Error('Invalid JSON format');
+                            } else if (file.name.endsWith('.txt')) {
+                                wordlist = wordlist.split('\n').map(line => line.trim());
+                            } else {
+                                reject('Unsupported file type. Only .txt or .json files are allowed.');
+                                return;
+                            }
+                            resolve(wordlist);
+                        } catch (err) {
+                            reject('Failed to process the file. Ensure it is a valid .txt or .json wordlist.');
+                        }
+                    };
+
+                    reader.onerror = function() {
+                        reject('Failed to read the file.');
+                    };
+
+                    reader.readAsText(file);
+                });
+            }
+
+            // Generate SHA-256 Hash using Web Crypto API
+            async function generateHash(text) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(text);
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            }
+
+            // Show result box with content
+            function showResultWithContent(resultDiv, content) {
+                resultDiv.innerHTML = content;
+                resultDiv.classList.add('has-content');
+            }
+    
+    </script>
+</body>
+</html>
